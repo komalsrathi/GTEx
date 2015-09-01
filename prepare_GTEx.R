@@ -14,6 +14,7 @@ gtex.ann <- gtex.ann[, .(SAMPID,SMTS,SMTSD)]
 
 # merge counts/rpkm with annotation
 dat <- merge(gtex.ann,gtex.melt,by="SAMPID")
+dat$Name <- sub("[.][0-9]*","",dat$Name) # remove .* from ENSEMBL ID
 dt.mat <- dcast(dat, SAMPID + SMTS + SMTSD ~ Name, value.var="value")
 
 # or you can extract any tissue type and do downstream analysis
