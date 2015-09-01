@@ -14,7 +14,8 @@ gtex.ann <- gtex.ann[, .(SAMPID,SMTS,SMTSD)]
 
 # merge counts/rpkm with annotation
 dat <- merge(gtex.ann,gtex.melt,by="SAMPID")
+dt.mat <- dcast(dat, SAMPID + SMTS + SMTSD ~ Name, value.var="value")
 
-# after this, you can extract any tissue type and do downstream analysis
+# or you can extract any tissue type and do downstream analysis
 dt <-  subset(dat, SMTSD == "Whole Blood")
-# dt <- dcast(dt, SAMPID + SMTS + SMTSD ~ Description, value.var="value")
+dt.mat <- dcast(dt, SAMPID + SMTS + SMTSD ~ Name, value.var="value") # Name is Ensembl ID
