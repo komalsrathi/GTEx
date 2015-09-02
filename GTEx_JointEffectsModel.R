@@ -38,12 +38,23 @@ subj.info$meanAGE <- round((subj.info$min+subj.info$max)/2)
 # merge subject info to expression
 expr.m <- merge(subj.info[, .(SUBJID,GENDER,meanAGE)],expr.m,by='SUBJID')
 
-# This is not required right now
-# but this step is important to reduce the size of the dataset
+# This step is important to reduce the size of the dataset
 # filter out certain low expressing genes
+# this is using data frame
 # expr.m <- expr.m[,4:ncol(expr.m)]
 # expr.m <- expr.m[,which(colMeans(expr.m > -3.287463) > 0.8)]
 # expr.m <- cbind(expr.m[,c(1:3)],expr.m)
+# selects genes where 80% samples have expression value > min(expression value)
+filter.mean <- function(x){
+  m <- (colMeans(x > -3.287463) > 0.8) 
+  return(m)
+}
+
+# this is using data table
+expr.sub <- expr.m[,4:ncol(expr.m),with=F]
+means <- expr.sub[,lapply(list(expr.sub),filter.mean)] # apply filter.mean function that we defined above
+expr.sub <- expr.sub[, which(means$V1 %in% TRUE),with=F]
+expr.m <- cbind(expr.m[,.(SUBJID,GENDER,meanAGE)],expr.sub) # this is filtered data
 
 # number of genes to test for joint effects
 len <- length(grep('ENSG',colnames(expr.m)))
