@@ -35,7 +35,7 @@ for(i in 1:length(list))
   dev.off()
 }
 
-# this example shows how you can make boxplots of each type and save in one image
+# this example shows how you can make boxplots of each tissue type and save in one image
 # make boxplots for each tissue type
 # melt the transformed data
 dat.boxplot <- melt(dat.scatter,variable.name='Description')
