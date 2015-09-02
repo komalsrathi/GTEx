@@ -15,8 +15,14 @@ gtex.ann <- gtex.ann[, .(SAMPID,SMTS,SMTSD)]
 # merge counts/rpkm with annotation
 dat <- merge(gtex.ann,gtex.melt,by="SAMPID")
 dat$Name <- sub("[.][0-9]*","",dat$Name) # remove .* from ENSEMBL ID
-dt.mat <- dcast(dat, SAMPID + SMTS + SMTSD ~ Name, value.var="value")
 
-# or you can extract any tissue type and do downstream analysis
+# you can save this as an R object
+save(dat,file="GTEx_allTissues_geneReads.RData") 
+# or save as a txt.gz file
+gz1 <- gzfile("GTEx_allTissues_geneReads.txt.gz","w") 
+write.table(x=final,file=gz1,quote=F,sep="\t",row.names=F)
+close(gz1)
+
+# You can then extract any tissue type or gene of interest and do downstream analysis as follows:
 dt <-  subset(dat, SMTSD == "Whole Blood")
 dt.mat <- dcast(dt, SAMPID + SMTS + SMTSD ~ Name, value.var="value") # Name is Ensembl ID
